@@ -29,47 +29,49 @@ class Pelicula{
 }
 class Soporte{
     public double costoalquiler;
+    public double precio;
+    public int cantidad;
     public Pelicula Pelicula;
-    public Soporte(Pelicula Pelicula) {
+    public Soporte(double costoalquiler, double precio, int cantidad, Pelicula Pelicula) {
+        this.costoalquiler = costoalquiler;
+        this.precio = precio;
+        this.cantidad = cantidad;
         this.Pelicula = Pelicula;
     }
-    public double calcularAlquiler(int cantPeliculas, double precioAlquiler){
-        this.costoalquiler=cantPeliculas* precioAlquiler;
-        return costoalquiler;
+    public double calcularAlquiler(){
+        this.costoalquiler=(this.cantidad* this.precio);
+        return this.costoalquiler;
     }
-
     @Override
     public String toString() {
-        return "Soporte{" + "costoalquiler=" + costoalquiler + ", Pelicula=" + Pelicula + '}';
+        return "Soporte{" + "costoalquiler=" + costoalquiler + ", precio=" + precio + ", cantidad=" + cantidad + ", Pelicula=" + Pelicula + '}';
     }
-     
+
 }
 class DVD extends Soporte{
     public String idiomas[];
-    public double recargo;
-    public DVD(String[] idiomas, double recargo, Pelicula Pelicula) {
-        super(Pelicula);
+    public double PorcentajeRecargo;
+    public DVD(String[] idiomas, double PorcentajeRecargo, double costoalquiler, double precio, int cantidad, Pelicula Pelicula) {
+        super(costoalquiler, precio, cantidad, Pelicula);
         this.idiomas = idiomas;
-        this.recargo = recargo;
+        this.PorcentajeRecargo = PorcentajeRecargo;
     }
     public double calcularAlquiler(int cantPeliculas, double precioAlquiler){
-        this.costoalquiler=(super.calcularAlquiler(cantPeliculas, precioAlquiler)+((precioAlquiler*(this.recargo/100.0))));
-        return costoalquiler;
+        this.costoalquiler=super.calcularAlquiler()+(this.costoalquiler*(this.PorcentajeRecargo/100));
+        return this.costoalquiler;
     }
-
     @Override
     public String toString() {
-        return "DVD{" + "idiomas=" + Arrays.toString(idiomas) + ", recargo=" + recargo + '}'+super.toString();
+        return "DVD{" + "idiomas=" + Arrays.toString(idiomas) + ", recargo=" + PorcentajeRecargo + '}'+super.toString();
     }
     
 }
 class VHS extends Soporte{
     public String idioma;
-    public VHS(String idioma, Pelicula Pelicula) {
-        super(Pelicula);
+    public VHS(String idioma, double costoalquiler, double precio, int cantidad, Pelicula Pelicula) {
+        super(costoalquiler, precio, cantidad, Pelicula);
         this.idioma = idioma;
     }
-
     @Override
     public String toString() {
         return "VHS{" + "idioma=" + idioma + '}'+super.toString();
@@ -80,15 +82,18 @@ public class Problema_02_EjecutorVideoClub {
     public static void main(String[] args) {
         String idiomas[]={"ES","ENG"}; 
         Pelicula peli1=new Pelicula("El Mundial","Enrique",2026);
-        DVD peliMundial=new DVD(idiomas,10, peli1);
+        DVD peliMundial=new DVD(idiomas,10,5,5,2,peli1);
         peliMundial.calcularAlquiler(2, 50);
         Pelicula peli2=new Pelicula("El bicho","Juan",2025);
-        VHS pelibicho=new VHS("ES", peli2);
-        pelibicho.calcularAlquiler(2, 10);
+        VHS pelibicho=new VHS(idiomas[0],10,5,2,peli2);
+        pelibicho.calcularAlquiler();
         System.out.println(peliMundial);
         System.out.println(pelibicho);
     }
 }
 /**
- * 
+ * run:
+DVD{idiomas=[ES, ENG], recargo=10.0}Soporte{costoalquiler=11.0, precio=5.0, cantidad=2, Pelicula=Pelicula{titulo=El Mundial, autor=Enrique, anio=2026}}
+VHS{idioma=ES}Soporte{costoalquiler=10.0, precio=5.0, cantidad=2, Pelicula=Pelicula{titulo=El bicho, autor=Juan, anio=2025}}
+BUILD SUCCESSFUL (total time: 0 seconds)
  */
